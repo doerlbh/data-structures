@@ -4,7 +4,9 @@
 
 ## Tasks
 
-1. Using Node.js (in Cloud 9), make a request for each of the ten "Meeting List Agenda" pages for Manhattan. 
+1. Set up AWS Cloud9 environment.
+2. Link GitHub with AWS for data syncing.
+3. Using Node.js (in Cloud 9), make a request for each of the ten "Meeting List Agenda" pages for Manhattan. 
 ```
 https://parsons.nyc/aa/m01.html  
 https://parsons.nyc/aa/m02.html  
