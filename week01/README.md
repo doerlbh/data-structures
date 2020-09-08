@@ -1,6 +1,12 @@
-# Week 1 Learning
+# Week 01
 
  
+
+## Topics
+
+AWS Cloud9, Node.js, npm, basic web crawling
+
+
 
 ## Tasks
 
