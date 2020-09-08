@@ -18,11 +18,11 @@ https://parsons.nyc/aa/m09.html
 https://parsons.nyc/aa/m10.html   
 ```
 
-2. Using Node.js: For each of the ten files requested, save the body as a **text file** to "local" environment (in AWS Cloud9).
+2. Using Node.js: For each of the ten files requested, save the body as a text file to "local" environment (in AWS Cloud9).
 
 3. Study the HTML structure and tags and think about how one might parse these files to extract relevant data for these AA meetings.
 
-4. Update your GitHub repository with the relevant files. 
+4. Update the GitHub repository with the relevant files. 
 
     
 
@@ -53,6 +53,4 @@ request('https://parsons.nyc/thesis-2020/', function(error, response, body){
 
 
 
-## Map of AA zones
 
-![](https://github.com/visualizedata/data-structures/raw/master/assets/aa.png)
