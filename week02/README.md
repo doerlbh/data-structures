@@ -21,7 +21,7 @@ AWS Cloud9, Node.js, cheerio, basic javascript
 ## Key solution
 
 ```javascript
-var addresses = $('.detailsBox')                                    // locate detailsBox
+var addresses = $('h4').slice(2)                                    // locate h4
                     .map( (i,elem) => $(elem.parentNode).text()     // get parent node
                                             .split("\n")[3].trim()  // get 3rd row (with address)
                                             .split(',')[0].trim()   // get only street (no room)
