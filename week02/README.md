@@ -37,27 +37,40 @@ https://parsons.nyc/aa/m10.html
 ## Example code
 
 ```javascript
-// npm install request
-// mkdir data
+// npm install cheerio
 
-var request = require('request');
 var fs = require('fs');
+var cheerio = require('cheerio');
 
-request('https://parsons.nyc/thesis-2020/', function(error, response, body){
-    if (!error && response.statusCode == 200) {
-        fs.writeFileSync('/home/ec2-user/environment/data/thesis.txt', body);
-    }
-    else {console.log("Request failed!")}
+// load the thesis text file into a variable, `content`
+// this is the file that we created in the starter code from last week
+var content = fs.readFileSync('data/thesis.txt');
+
+// load `content` into a cheerio object
+var $ = cheerio.load(content);
+
+// print (to the console) names of thesis students
+$('h3').each(function(i, elem) {
+    console.log($(elem).text());
 });
+
+// write the project titles to a text file
+var thesisTitles = ''; // this variable will hold the lines of text
+
+$('.project .title').each(function(i, elem) {
+    thesisTitles += ($(elem).text()).trim() + '\n';
+});
+
+fs.writeFileSync('data/thesisTitles.txt', thesisTitles);
 ```
 
  
 
 ## Documentation
 
-* [What is `npm`?](https://docs.npmjs.com/getting-started/what-is-npm)  
-* [Node request module](https://www.npmjs.com/package/request)  
-* [Node fs module](https://nodejs.org/api/fs.html)  
+* [Node cheerio module](https://www.npmjs.com/package/cheerio)
+* [Introduction to the DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)  
+* [JavaScript data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)
 
 
 
