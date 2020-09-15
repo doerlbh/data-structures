@@ -1,38 +1,35 @@
-# Week 01
+# Week 02
 
  
 
 ## Topics
 
-AWS Cloud9, Node.js, npm, basic web crawling
+AWS Cloud9, Node.js, cheerio, basic javascript
 
 
 
 ## Tasks
 
-1. Set up AWS Cloud9 environment.
-2. Link GitHub with AWS for data syncing.
-3. Using Node.js (in Cloud 9), make a request for each of the ten "Meeting List Agenda" pages for Manhattan. 
+1. Using Node.js, read the and store text files in a variable.
+
+2. Query: "why are we reading this from a saved text file instead of making another http request?"
+
+3. Use cheerio to parse HTML to extract the relevant data for each meeting -- meeting address as rows.
+ 
+
+
+## Key solution
+
+```javascript
+var addresses = $('.detailsBox')                                   // locate detailsBox
+                    .map( (i, elem) => $(elem.parentNode).text()   // get parent node
+                                            .split("\n")[3].trim() // get 3rd row (with address)
+                                            .split(',')[0].trim()  // get only street (no room)
+                                            .split('-')[0])        // remove extra info (no floor)
+                    .filter( (v, i, a) => a.indexOf(v) === i )     // remove duplicate
+                    .get(); 
 ```
-https://parsons.nyc/aa/m01.html  
-https://parsons.nyc/aa/m02.html  
-https://parsons.nyc/aa/m03.html  
-https://parsons.nyc/aa/m04.html  
-https://parsons.nyc/aa/m05.html  
-https://parsons.nyc/aa/m06.html  
-https://parsons.nyc/aa/m07.html  
-https://parsons.nyc/aa/m08.html  
-https://parsons.nyc/aa/m09.html  
-https://parsons.nyc/aa/m10.html   
-```
 
-2. Using Node.js: For each of the ten files requested, save the body as a text file to "local" environment (in AWS Cloud9).
-
-3. Study the HTML structure and tags and think about how one might parse these files to extract relevant data for these AA meetings.
-
-4. Update the GitHub repository with the relevant files. 
-
-    
 
 ## Example code
 
