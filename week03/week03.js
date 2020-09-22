@@ -9,14 +9,29 @@ const fs = require('fs'),
       async = require('async'),
       dotenv = require('dotenv');
 
+var cheerio = require('cheerio');
+
+var content = fs.readFileSync('data/m07.txt');
+var $ = cheerio.load(content);
+
+var addresses = $('h4').slice(2)                                    // locate h4
+                    .map( (i,elem) => $(elem.parentNode).text()     // get parent node
+                                            .split("\n")[3].trim()  // get 3rd row (with address)
+                                            .split(',')[0].trim()   // get only street (no room)
+                                            .split('-')[0].trim() ) // remove extra info (no floor)
+                    .get();
+
+fs.writeFileSync('m07_addresses.json', JSON.stringify(addresses));
+
+addresses = JSON.parse(fs.readFileSync('m07_addresses.json'));
+
 // TAMU api key
-dotenv.config();
+dotenv.config({path: '../.env'});
 const API_KEY = process.env.TAMU_KEY;
 const API_URL = 'https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx'
 
 // geocode addresses
 let meetingsData = [];
-let addresses = ["63 Fifth Ave", "16 E 16th St", "2 W 13th St"];
 
 // eachSeries in the async module iterates over an array and operates on each item in the array in series
 async.eachSeries(addresses, function(value, callback) {
@@ -36,14 +51,22 @@ async.eachSeries(addresses, function(value, callback) {
         if (err){ throw err; }
 
         let tamuGeo = JSON.parse(body);
-        console.log(tamuGeo['FeatureMatchingResultType'], apiRequest);
-        meetingsData.push(tamuGeo);
+        // console.log(tamuGeo['FeatureMatchingResultType'], apiRequest);
+        console.log(tamuGeo['FeatureMatchingResultType'], value);
+        var tamuGeoItem = {
+            address: value + ", New York, NY",
+            latLong: {
+                lat: tamuGeo.OutputGeocodes[0].OutputGeocode.Latitude,
+                lng: tamuGeo.OutputGeocodes[0].OutputGeocode.Longitude
+            }
+        };
+        meetingsData.push(tamuGeoItem);
     });
 
     // sleep for a couple seconds before making the next request
-    setTimeout(callback, 2000);
+    setTimeout(callback, 1000);
 }, function() {
-    fs.writeFileSync('data/first.json', JSON.stringify(meetingsData));
+    fs.writeFileSync('m07_geostamps.json', JSON.stringify(meetingsData));
     console.log('*** *** *** *** ***');
     console.log(`Number of meetings in this zone: ${meetingsData.length}`);
 });
