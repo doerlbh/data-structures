@@ -12,10 +12,10 @@ Relational database, PostgreSQL, AWS RDS, SQL syntax, query RDB with pg
 1. Set up a PostgreSQL database server on AWS.
 2. Query AWS RDS with pg client on Node.js.
 3. Create and populate tables in the database with pg queries.
-4. Check database in an interactive way
+4. Check database in an interactive way.
 
 Planning to store tabular data (SQL):  
-* A flat or denormalized data model might be better for simpler projects like this mapping attempt, as it's cheaper and uses only one table.
+* A flat or denormalized data model might be better for small projects like this one, as it is cheaper and faster.
 * When data comes back out of the database, it should be structured as JSON array with objects that have parallel features.
 * The data hierarchy in our tabular format, would be flat, that each columns, or properties, be stored without nesting. 
 
