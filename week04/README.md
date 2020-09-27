@@ -4,173 +4,89 @@
 
 ## Topics
 
-dotenv.config, gitignore, JSON processing, API request and parsing, async.eachSeries().
-
+Relational database, PostgreSQL, AWS RDS, SQL syntax, query RDB with pg
 
 
 ## Tasks
 
-1. Using Node.js, read the and store text files in a JSON file with JSON.stringify()
-2. Set up API keys in privately hosted .env files, excluded from GitHub and public access
-3. Use JSON.parse() to extract addresses stored in the saved JSON file, and make API requests to the [Texas A&M Geoservices Geocoding APIs](http://geoservices.tamu.edu/Services/Geocode/WebService/) for each address
-4. Apply async.eachSeries() and setTimeOut() to avoid abusing API
-5. Parse API responses to extract the relevant geostamps for each address
+1. Set up a PostgreSQL database server on AWS.
+2. Query AWS RDS with pg client on Node.js.
+3. Create and populate tables in the database with pg queries.
+4. Check database in an interactive way
 
-Things to note:  
-* API rate limits
-* Asyncronous JavaScript (but don't overuse `setTimeout`)  
-* Keeping API key(s) off of GitHub (use an [environment variable](https://www.npmjs.com/package/dotenv) instead)  
-* Keeping only the data we need from the API response, not all the data  
+Planning to store tabular data (SQL):  
+* A flat or denormalized data model might be better for simpler projects like this mapping attempt, as it's cheaper and uses only one table.
+* When data comes back out of the database, it should be structured as JSON array with objects that have parallel features.
+* The data hierarchy in our tabular format, would be flat, that each columns, or properties, be stored without nesting. 
 
-
-
-## Key solution
+## Key SQL syntax
 
 ```javascript
-async.eachSeries(addresses, function(value, callback) {
-    let query = {
-        streetAddress: value,
-        city: "New York",
-        state: "NY",
-        apikey: API_KEY,
-        format: "json",
-        version: "4.01"
-    };
-
-    // construct a querystring from the `query` object's values and append it to the api URL
-    let apiRequest = API_URL + '?' + querystring.stringify(query);
-
-    request(apiRequest, function(err, resp, body) {
-        if (err){ throw err; }
-
-        let tamuGeo = JSON.parse(body);
-        console.log(tamuGeo['FeatureMatchingResultType'], value);
-        var tamuGeoItem = {
-            address: value + ", New York, NY",
-            latLong: {
-                lat: tamuGeo.OutputGeocodes[0].OutputGeocode.Latitude,
-                lng: tamuGeo.OutputGeocodes[0].OutputGeocode.Longitude
-            }
-        };
-        meetingsData.push(tamuGeoItem);
-    });
-
-    // sleep for a couple seconds before making the next request
-    setTimeout(callback, 1000);
-}
+SELECT * FROM demo;
+DROP TABLE demo;
+CREATE TABLE demotable (address VARCHAR(100), lat DOUBLE PRECISION, lng DOUBLE PRECISION);
+INSERT INTO demotable VALUES ("34 Fifth Ave, New York, NY", "40.12313", "-79,123123");
+INSERT INTO demotable VALUES ("100 Crazy Ave, New York, NY", "40.11613", "-100,121123");
+SELECT * FROM demotable;
+--DROP TABLE demotable;
 ```
 
+## Key Javascript solution
 
-## Example code
-
+To create, delete and check a table in the database:
 ```javascript
-// npm install request async dotenv
+// npm install pg
+const { Client } = require('pg');
 
-"use strict"
+// AWS RDS POSTGRESQL INSTANCE
+var db_credentials = new Object();
+db_credentials.user = 'doerlbh';
+db_credentials.host = 'data-structures.cuwjvah1c0p0.us-east-2.rds.amazonaws.com';
+db_credentials.database = 'aa';
+db_credentials.password = process.env.AWSRDS_PW;
+db_credentials.port = 5432;
 
-// dependencies
-const fs = require('fs'),
-      querystring = require('querystring'),
-      request = require('request'),
-      async = require('async'),
-      dotenv = require('dotenv');
+// Connect to the AWS RDS Postgres database
+const client = new Client(db_credentials);
+client.connect();
 
-// TAMU api key
-dotenv.config();
-const API_KEY = process.env.TAMU_KEY;
-const API_URL = 'https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx'
+// SQL statement to create a table: 
+var thisQuery = "CREATE TABLE aalocations (address varchar(100), lat double precision, long double precision);";
 
-// geocode addresses
-let meetingsData = [];
-let addresses = ["63 Fifth Ave", "16 E 16th St", "2 W 13th St"];
+// SQL statement to delete a table: 
+var thisQuery = "DROP TABLE aalocations;"; 
 
-// eachSeries in the async module iterates over an array and operates on each item in the array in series
-async.eachSeries(addresses, function(value, callback) {
-    let query = {
-        streetAddress: value,
-        city: "New York",
-        state: "NY",
-        apikey: API_KEY,
-        format: "json",
-        version: "4.01"
-    };
+// SQL statement to query the entire contents of a table: 
+var thisQuery = "SELECT * FROM aalocations;";
 
-    // construct a querystring from the `query` object's values and append it to the api URL
-    let apiRequest = API_URL + '?' + querystring.stringify(query);
-
-    request(apiRequest, function(err, resp, body) {
-        if (err){ throw err; }
-
-        let tamuGeo = JSON.parse(body);
-        console.log(tamuGeo['FeatureMatchingResultType'], apiRequest);
-        meetingsData.push(tamuGeo);
-    });
-
-    // sleep for a couple seconds before making the next request
-    setTimeout(callback, 2000);
-}, function() {
-    fs.writeFileSync('data/first.json', JSON.stringify(meetingsData));
-    console.log('*** *** *** *** ***');
-    console.log(`Number of meetings in this zone: ${meetingsData.length}`);
+client.query(thisQuery, (err, res) => {
+    console.log(err, res.rows);
+    client.end();
 });
 ```
 
- 
+To populate a table in the database:
+```javascript
+// SQL statement to populate a table: 
+async.eachSeries(geostamps, function(value, callback) {
+    const client = new Client(db_credentials);
+    client.connect();
+    var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', " + value.latLong.lat + ", " + value.latLong.lng + ");";
+    client.query(thisQuery, (err, res) => {
+        console.log(err, res);
+        client.end();
+    });
+    setTimeout(callback, 1000); 
+}); 
+
+```
+
 
 ## Documentation
 
-* [Texas A&M Geoservices Geocoding APIs](http://geoservices.tamu.edu/Services/Geocode/WebService/)  
-* [Node `querystring` module](https://nodejs.org/api/querystring.html)
-* [npm `async` module](http://caolan.github.io/async/)  
-* [npm `dotenv` module](https://www.npmjs.com/package/dotenv)
-
-
-
-## Sample API response
-
-```javascript
-{
-  "version" : "4.01",
-  "TransactionId" : "d119d15f-5221-446e-9d6d-fa779a5be9c3",
-  "Version" : "4.01",
-  "QueryStatusCodeValue" : "200",
-  "FeatureMatchingResultType" : "Success",
-  "FeatureMatchingResultCount" : "7",
-  "TimeTaken" : "0.203184",
-  "ExceptionOccured" : "False",
-  "Exception" : "",
-  "InputAddress": {
-    "StreetAddress" : "45 CHRISTOPHER ST New York NY ",
-    "City" : "New York",
-    "State" : "NY",
-    "Zip" : ""
-  },
-  "OutputGeocodes": [
-    {
-      "OutputGeocode": {
-        "Latitude" : "40.7338458",
-        "Longitude" : "-74.0018119",
-        "NAACCRGISCoordinateQualityCode" : "00",
-        "NAACCRGISCoordinateQualityType" : "AddressPoint",
-        "MatchScore" : "97.3372781065089",
-        "MatchType" : "Relaxed",
-        "FeatureMatchingResultType" : "Success",
-        "FeatureMatchingResultCount" : "1",
-        "FeatureMatchingGeographyType" : "Parcel",
-        "RegionSize" : "0",
-        "RegionSizeUnits" : "Meters",
-        "MatchedLocationType" : "LOCATION_TYPE_STREET_ADDRESS",
-        "ExceptionOccured" : "False",
-        "Exception" : "",
-        "ErrorMessage" : ""
-      }
-    }
-  ]
-}
-```
-
-* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)
-
-
+* [SQL tutorial](https://www.linkedin.com/learning/sql-essential-training-2)  
+* [PostgreSQL data types](https://www.postgresql.org/docs/9.4/static/datatype.html)  
+* [PostgreSQL documentation](https://www.postgresql.org/docs/9.4/static/)
+* [Node `pg` module](https://www.npmjs.com/package/pg)
 
 
