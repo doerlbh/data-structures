@@ -19,7 +19,7 @@ Planning to store tabular data (SQL):
 * When data comes back out of the database, it should be structured as JSON array with objects that have parallel features.
 * The data hierarchy in our tabular format, would be flat, that each columns, or properties, be stored without nesting. 
 
-![tabular_terms](/Users/DoerLBH/Dropbox (Personal)/Git/data-structures/week04/tabular_terms.png)
+![tabular_terms](./tabular_terms.png)
 
 ## Key SQL syntax
 
