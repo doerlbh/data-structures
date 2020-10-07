@@ -21,7 +21,7 @@ Planning to store process blog (NOSQL):
 * When data comes back out of the database, it should be structured as JSON array with objects that have parallel features. However, some relational structures might be helpful if we are dealing with recurring concepts.
 * The data hierarchy would likely be defined at the first level by topics (e.g. "courses", "design", "life"), and then in each topic, we store blog post individually as parallel items. The date itself might involves some additional hierarchy.
 
-![processblog_plan](./processblog_plan.png)
+![processblog_plan](./pb_plan.png)
 
 ## On defining a process blog class
 
