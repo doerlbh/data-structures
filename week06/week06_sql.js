@@ -29,7 +29,7 @@ client.connect();
 // // Sample SQL statement to query meetings on Monday that start on or after 7:00pm: 
 // var thisQuery = "SELECT mtgday, mtgtime, mtglocation, mtgaddress, mtgtypes FROM aadata WHERE mtgday = 'Monday' and mtghour >= 19;";
 
-// Sample SQL statement to query meetings on Monday that start on or after 7:00pm: 
+// Sample SQL statement to query location in certain region: 
 var thisQuery = "SELECT * FROM aalocations WHERE  lat > 40.77 and long <= -73.96;;";
 
 client.query(thisQuery, (err, res) => {
