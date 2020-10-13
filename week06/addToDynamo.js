@@ -1,24 +1,27 @@
 var diaryEntries = [];
 
 class DiaryEntry {
-  constructor(tp, dt, entry) {
+  constructor(tp, dt, entry, state,priority) {
     this.tp = {};
     this.tp.S = tp;
     this.dt = {}; 
     this.dt.N = new Date(dt).valueOf().toString();
     this.entry = {};
     this.entry.S = entry;
+    this.st = {};
+    this.st.S = state;
+    this.pr = {};
+    this.pr.N = priority;
   }
 }
 
-diaryEntries.push(new DiaryEntry('personal', 'March 10, 1976 11:30:00', "I was born!"));
-diaryEntries.push(new DiaryEntry('personal', 'October 31, 2015 13:00:00', "I piloted my first solo flight! I ate pancakes to celebrate."));
-diaryEntries.push(new DiaryEntry('work', 'June 1, 1998 08:00:00', "I started my first professional job."));
-diaryEntries.push(new DiaryEntry('work', 'September 23, 2020 12:10:00', "I taught my favorite students."));
-diaryEntries.push(new DiaryEntry('cats', 'September 26, 2020 23:00:00', "Eudora chased his tail."));
-diaryEntries.push(new DiaryEntry('work', 'October 7, 2020 12:10:00', "I taught my favorite students."));
-diaryEntries.push(new DiaryEntry('cats', 'October 6, 2020 22:15:00', "Mr. Jingles took a nap."));
-diaryEntries.push(new DiaryEntry('work', 'November 25, 2020 12:10:00', "Class doesn't meet."));
+diaryEntries.push(new DiaryEntry('personal', 'September 1, 2017 07:00:00', "I started my study at Columbia.","happy","1"));
+diaryEntries.push(new DiaryEntry('work', 'June 1, 2013 08:00:00', "I started my first internship.","happy","1"));
+diaryEntries.push(new DiaryEntry('work', 'September 23, 2020 12:10:00', "I learned a new programming language.","okay","0"));
+diaryEntries.push(new DiaryEntry('cats', 'June 23, 2018 18:00:00', "I adopted Neptune.","happy","1"));
+diaryEntries.push(new DiaryEntry('cats', 'October 7, 2020 12:10:00', "Jupiter stepped onto my favorite plants.","sad","0"));
+diaryEntries.push(new DiaryEntry('cats', 'October 6, 2020 22:15:00', "Jupiter got fatter.","happy","0"));
+diaryEntries.push(new DiaryEntry('personal', 'November 25, 2020 12:10:00', "I got an internship offer.","happy","0"));
 
 console.log(diaryEntries);
 
