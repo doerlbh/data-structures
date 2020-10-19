@@ -20,16 +20,12 @@ const fs = require('fs'),
 
 var cheerio = require('cheerio');
 
-var content = fs.readFileSync('../data/m07.txt');
-var $ = cheerio.load(content);
 
-// var mtglocation = $('h4').slice(2).map( (i,elem) => $(elem).text()).get();
-// var mtgday = $("td[style='border-bottom:1px solid #e3e3e3;width:350px;']")
-//              .map( (i,elem) => $(elem).text())
-            //  .split("\n")[3].trim()  // get 3rd row (with address)
-                    //                         .split(',')[0].trim()   // get only street (no room)
-                    //                         .split('-')[0].trim() ) // remove extra info (no floor)
-                    // .get();
+var i = 7;
+var filecount = ('0' + i).slice(-2);
+
+var content = fs.readFileSync('../data/html/m'+filecount+'.txt');
+var $ = cheerio.load(content);
 
 var addresses = $('h4').slice(2)                                    // locate h4
                     .map( (i,elem) => $(elem.parentNode).text()     // get parent node
@@ -38,16 +34,35 @@ var addresses = $('h4').slice(2)                                    // locate h4
                                             .split('-')[0].trim() ) // remove extra info (no floor)
                     .get();
 
-var days = $('b:contains("From")')
-            .map( (i,elem) => $(elem).text().substring(0,$(elem).text().length-6) )
-            .get();
-            
+fs.writeFileSync('../data/address/m'+filecount+'_addresses.json', JSON.stringify(addresses));
 
-var starttime = $('b:contains("From")')
-            .map( (i,elem) => $(elem).text().substring(0,$(elem).text().length-6) )
-            .get();
-            
-console.log(days);
+var meetinginfo = $('td[style="border-bottom:1px solid #e3e3e3;width:350px;"]') // extract all meeting info
+                    .map( (i,elem) => $(elem).text() 
+                                        .split("\n")
+                                        .map( x => x.trim() )
+                                        .filter( x => x.length > 0 )
+                                        .join('\n') )
+                    .get();
+
+var addressinfo = $('h4').slice(2)                                   
+                    .map( (i,elem) => $(elem.parentNode).html()    
+                                            .split("\n")
+                                            .map( x => x.trim() )
+                                            .filter( x => x.length > 0 )
+                                            .join('\n')) 
+                    .get();
+
+var meetings = [];
+meetinginfo.forEach( (i,x) => {
+    var submeetings = {
+        
+    };
+    submeetings.forEach( (j,meeting) => {
+        meetings.push(meeting);
+    });
+}); 
+                    
+console.log(addressinfo[47]);
 
 
 // WORK IN PROGRESS FOR THIS PART: for final visualization exercise.
