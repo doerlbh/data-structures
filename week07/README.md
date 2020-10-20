@@ -4,7 +4,7 @@
 
 ## Topics
 
-Javascript, jQuery, Cheerio, SQL
+Javascript, jQuery, cheerio, SQL
 
 
 ## Tasks
@@ -12,7 +12,7 @@ Javascript, jQuery, Cheerio, SQL
 1. Clean up all the HTML files in the AA dataset
 2. Extract important meeting-related information
 3. Push them onto PostgreSQL databases
-    
+  
   
 ## Relational Database Structure for the dataset
 
@@ -22,15 +22,15 @@ The RDS structure is updated to be the following:
 
 Organize preprocessed data:
 
-* folder ../data/address/: extracted JSON that stored address information
-* folder ../data/geostamp/: extracted JSON that stored address geostamps
-* folder ../data/meeting/: extracted JSON that stored meeting information
-* folder ../data/html/: original crawled HTML files
+* **folder ../data/address/**: extracted JSON that stored address information
+* **folder ../data/geostamp/**: extracted JSON that stored address geostamps
+* **folder ../data/meeting/**: extracted JSON that stored meeting information
+* **folder ../data/html/**: original crawled HTML files
 
   
   
-## Crawl HTML data with jQuery
- 
+## Crawl HTML data with jQuery and cheerio.js
+
 File: crawlData.js
 
 ```javascript
@@ -140,7 +140,7 @@ Example of the JSON output of meeting information:
 
 
 ## Crawl geostamps from TAMU API
- 
+
 File: crawlGeo.js
 
 ```javascript
@@ -220,11 +220,11 @@ for (let i = 1; i < 11; i++) {
 }
 
 ```
-  
+
    
 
-## Create and update postgreSQL tables for meeting information
- 
+## Create and update postgreSQL tables 
+
 File: addToPostgre.js
 
 ```javascript
@@ -324,11 +324,11 @@ for (let i = 1; i < 11; i++) {
 }
 
 ```
-  
+
    
-   
+
 ## Check postgreSQL for aameetings table
- 
+
 File: checkPostgre.js
 
 ```javascript
