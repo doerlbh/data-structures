@@ -44,17 +44,17 @@ for (let i = 1; i < 11; i++) {
     meetinginfo.forEach((meetingset, i) => {
         var submeetings = meetingset.split('\n').map((mtext) => {
             var meeting = {};
-            meeting.address = addresses[i];
+            meeting.address = addresses[i] + ", New York, NY";
             meeting.building = addressinfo[i].split('</h4>')[0].split('>')[1].replace('<br>', '').trim();
-            meeting.title = (addressinfo[i].split('\n')[1].startsWith('<b>') ? addressinfo[i].split('\n')[1].split('</b>')[0].split('<b>')[1].trim() : '');
+            meeting.title = (addressinfo[i].split('\n')[1].startsWith('<b>') ? addressinfo[i].split('\n')[1].split('</b>')[0].split('<b>')[1].split('-')[0].trim() : '');
             meeting.address_notes = addressinfo[i].split('\n').slice(2, 4).join('').replace(',', ', ').replace('  ', ' ').replace('<br>', '').trim();
             meeting.meeting_notes = (addressinfo[i].includes('detailsBox') ? addressinfo[i].split('"detailsBox">')[1].split('</div')[0].replace('\n', '').replace('<br>', '').trim() : '');
             meeting.zipcode = meeting.address_notes.slice(meeting.address_notes.length - 5);
             meeting.wheelchair = (addressinfo[i].includes('wheelchair') ? true : false);
             meeting.day = mtext.split(' ')[0].trim();
-            meeting.start = mtext.split('From')[1].split('to')[0].trim();
-            meeting.end = mtext.split('to')[1].trim().split(' ').slice(0, 2).join(' ').trim();
-            meeting.type = (mtext.includes('Type') ? mtext.split('Type')[1].trim().split('Special')[0].trim() : '');
+            meeting.start_time = mtext.split('From')[1].split('to')[0].trim();
+            meeting.end_time = mtext.split('to')[1].trim().split(' ').slice(0, 2).join(' ').trim();
+            meeting.meeting_type = (mtext.includes('Type') ? mtext.split('Type')[1].trim().split('Special')[0].trim() : '');
             meeting.special = (mtext.includes('Special Interest') ? mtext.split('Special Interest')[1].trim() : '');
             return meeting; 
         });
