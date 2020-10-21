@@ -22,27 +22,25 @@ db_credentials.port = 5432;
 const client = new Client(db_credentials);
 client.connect();
 
-// NOTE: Run the following queries one at a time!
-
 var thisQuery = "DROP TABLE aalocations;";
 
 client.query(thisQuery, (err, res) => {
     console.log(err, res);
-    client.end();
+    // client.end();
 });
  
 var thisQuery = "DROP TABLE aameetings;";
 
 client.query(thisQuery, (err, res) => {
     console.log(err, res);
-    client.end();
+    // client.end();
 });
 
 var thisQuery = "CREATE TABLE aalocations (address varchar(100), lat double precision, long double precision);";
 
 client.query(thisQuery, (err, res) => {
     console.log(err, res);
-    client.end();
+    // client.end();
 });
 
 var thisQuery = " CREATE TABLE aameetings (address varchar(100), building varchar(100), title varchar(50), address_notes varchar(250), meeting_notes varchar(250), zipcode varchar(10), wheelchair varchar(10), day varchar(20), start_time varchar(10), end_time varchar(10), meeting_type varchar(50), special varchar(50));";
@@ -52,9 +50,7 @@ client.query(thisQuery, (err, res) => {
     client.end();
 });
 
-for (let i = 1; i < 11; i++) {
-
-    // var i = 10;
+async.eachSeries([1,2,3,4,5,6,7,8,9.10], function(i, callback0) {
 
     let filecount = ('0' + i).slice(-2);
 
@@ -69,7 +65,7 @@ for (let i = 1; i < 11; i++) {
     db_credentials.password = process.env.AWSRDS_PW;
     db_credentials.port = 5432;
 
-    async.eachSeries(aadata, function(value, callback) {
+    async.eachSeries(aadata, function(value, callback1) {
         const client = new Client(db_credentials);
         client.connect();
         var thisQuery = "INSERT INTO aameetings VALUES (E'" + value.address + "', E'" + value.building + "', E'" + value.title + "', E'" + value.address_notes + "', E'" + value.meeting_notes + "', E'" + value.zipcode + "', E'" + value.wheelchair + "', E'" + value.day + "', E'" + value.start_time + "', E'" + value.end_time + "', E'" + value.meeting_type + "', E'" + value.special + "');";
@@ -77,10 +73,10 @@ for (let i = 1; i < 11; i++) {
             console.log(err, res);
             client.end();
         });
-        setTimeout(callback, 500);
+        setTimeout(callback1, 500);
     });
 
-    async.eachSeries(geostamps, function(value, callback) {
+    async.eachSeries(geostamps, function(value, callback2) {
         const client = new Client(db_credentials);
         client.connect();
         var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', " + value.latLong.lat + ", " + value.latLong.lng + ");";
@@ -88,8 +84,10 @@ for (let i = 1; i < 11; i++) {
             console.log(err, res);
             client.end();
         });
-        setTimeout(callback, 500);
+        setTimeout(callback2, 500);
     });
-    
-}
+   
+   setTimeout(callback0, 500);
+
+});
 
