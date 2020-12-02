@@ -12,6 +12,11 @@ var template = handlebars.compile(indexSource, { strict: true });
 const pbSource = fs.readFileSync("templates/pb.txt").toString();
 var pbtemplate = handlebars.compile(pbSource, { strict: true });
 
+const dotenv = require('dotenv');
+dotenv.config({
+    path: '../.env'
+});
+
 // AWS RDS credentials
 var db_credentials = new Object();
 db_credentials.user = process.env.AWSRDS_UN;
@@ -78,11 +83,11 @@ app.get('/aa', function(req, res) {
     
     // SQL query 
     var thisQuery = `SELECT lat, lon, json_agg(json_build_object('loc', mtglocation, 'address', mtgaddress, 'time', tim, 'name', mtgname, 'day', day, 'types', types, 'shour', shour)) as meetings
-                 FROM aadatall 
-                 WHERE day = ` + dayy + 'and shour >= ' + hourr + 
-                 `GROUP BY lat, lon
+                 FROM aadataall 
+                 GROUP BY lat, lon
                  ;`;
 
+                 
     client.query(thisQuery, (qerr, qres) => {
         if (qerr) { throw qerr }
         
@@ -121,17 +126,17 @@ app.get('/temperature', function(req, res) {
 app.get('/processblog', function(req, res) {
     // AWS DynamoDB credentials
     AWS.config = new AWS.Config();
-    AWS.config.region = "us-east-1";
+    AWS.config.region = "us-east-2";
 
     // Connect to the AWS DynamoDB database
     var dynamodb = new AWS.DynamoDB();
 
     // DynamoDB (NoSQL) query
     var params = {
-        TableName : "aaronprocessblog",
-        KeyConditionExpression: "topic = :topic", // the query expression
+        TableName : "bhprocessblog",
+        KeyConditionExpression: "tp = :tp", // the query expression
         ExpressionAttributeValues: { // the query values
-            ":topic": {S: "cats"}
+            ":tp": {S: "cats"}
         }
     };
 

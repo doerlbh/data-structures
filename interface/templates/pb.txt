@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Aaron's Process Blog</title>
-  <meta name="description" content="Aaron's Process Blog">
-  <meta name="author" content="Aaron Hill">
+  <title>Baihan's Process Blog</title>
+  <meta name="description" content="Baihan's Process Blog">
+  <meta name="author" content="Baihan Lin">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link rel="stylesheet" href="css/styles.css?v=1.0">
 
@@ -22,7 +22,7 @@ var myTable = '<table><thead><tr><th>date</th><th>category</th><th>entry</th></t
 for (var i=0; i < data.length; i++) {
 	myTable += '<tr>';
 	myTable += '<td>' + data[i].dt.N + '</td>';
-	myTable += '<td>' + data[i].topic.S + '</td>';
+	myTable += '<td>' + data[i].tp.S + '</td>';
 	myTable += '<td>' + data[i].entry.S + '</td>';
 	myTable += '</tr>';
 
@@ -36,7 +36,7 @@ $(window).on('load', function() {
 
 </script>
 
-<h3>Aaron's process blog</h3>
+<h3>Baihan's process blog</h3>
 
 <div id='myEntries'></div>
 
