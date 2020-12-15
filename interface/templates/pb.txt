@@ -1,46 +1,166 @@
 <!doctype html>
 
 <html lang="en">
-<head>
-  <meta charset="utf-8">
 
-  <title>Baihan's Process Blog</title>
-  <meta name="description" content="Baihan's Process Blog">
-  <meta name="author" content="Baihan Lin">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+<head>
+    <meta charset="utf-8">
+
+    <title>Baihan's Process Blog</title>
+    <meta name="description" content="Baihan's Process Blog">
+    <meta name="author" content="Baihan Lin">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
 
 </head>
 
+<style>
+    body {
+        font-family: Arial;
+        padding: 20px;
+        background: #f1f1f1;
+    }
+
+    /* Header/Blog Title */
+    .header {
+        padding: 30px;
+        font-size: 40px;
+        text-align: center;
+        background: white;
+    }
+
+    /* Create two unequal columns that floats next to each other */
+    /* Left column */
+    .leftcolumn {
+        float: left;
+        width: 75%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 20%;
+        padding-left: 20px;
+    }
+
+    /* Fake image */
+    .fakeimg {
+        padding: 10px;
+    }
+
+    /* Add a card effect for articles */
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 20px;
+        text-align: center;
+        background: #ddd;
+        margin-top: 20px;
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+
+        .leftcolumn,
+        .rightcolumn {
+            width: 100%;
+            padding: 0;
+        }
+    }
+
+    .btn {
+        width: 80% border: none;
+        background-color: inherit;
+        padding: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    /* On mouse-over */
+    .btn:hover {
+        background: #eee;
+    }
+
+    .success {
+        color: green;
+    }
+
+    .info {
+        color: dodgerblue;
+    }
+
+    .warning {
+        color: orange;
+    }
+</style>
+
 <body>
 
-<script>
-var data = {{{pbdata}}} ; 
+    <script>
+        var data = {{{ pbdata }}};
 
-var myTable = '<table><thead><tr><th>date</th><th>category</th><th>entry</th></tr></thead><tbody>';
+        var myTable = '';
 
-for (var i=0; i < data.length; i++) {
-	myTable += '<tr>';
-	myTable += '<td>' + data[i].dt.N + '</td>';
-	myTable += '<td>' + data[i].tp.S + '</td>';
-	myTable += '<td>' + data[i].entry.S + '</td>';
-	myTable += '</tr>';
+        for (var i = 0; i < data.length; i++) {
+            myTable += '<div class="card">';
+            myTable += '<h2>' + data[i].entry.S + '</td>';
+            myTable += '<h5>' + new Date(parseInt(data[i].dt.N)) + '</h5>';
+            myTable += '<img src="https://images.squarespace-cdn.com/content/v1/562287c6e4b092a567c34b3f/1544219680598-77Z8CCXYIUY15FTHJ2YB/ke17ZwdGBToddI8pDm48kEYRtGJ-9LL1z7PwTdhLWTdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpzguQ2_BaIVzB9G0ylSa4tpxXywEzoLVWkTQVxy_XttV2ICiyWl6PjqZ52wPihkm8I/line-separator-green.png" class="fakeimg" style="height:100px" alt="">';
+            myTable += '<p style="color:red"> tag: ' + data[i].tp.S + '</p>';
+            myTable += '</div>'
+        }
 
-}
+        $(window).on('load', function () {
+            $("#myEntries").html(myTable)
+        });
 
-myTable += '</body></table>'
+    </script>
 
-$(window).on('load', function() {
-  $("#myEntries").html(myTable)
-});
+    <div class="header">
+        <h2>Process Blog of Baihan Lin</h2>
+    </div>
 
-</script>
+    <div class="row">
+        <div class="leftcolumn">
+            <div id='myEntries'></div>
+        </div>
+            <div class="rightcolumn">
+                <div class="card">
+                    <h2>About Me</h2>
+                    <img src="https://avatars2.githubusercontent.com/u/13342857?s=460&u=36389300a857b205d33ae1388edfff7cc16e3f96&v=4"
+                        class="fakeimg" style="height:100px" alt="">
+                    <p>DataViz is fun. DataViz is life.</p>
+                </div>
 
-<h3>Baihan's process blog</h3>
-
-<div id='myEntries'></div>
-
-<p><span class="blinking">My life is so interesting!</span></p>
+                <div class="card">
+                    <h3>Popular Tags</h3>
+                    <button class="btn success" onclick="window.location.href='/processblog?type=cats'">cats</button>
+                    <button class="btn info" onclick="window.location.href='/processblog?type=work'">work</button>
+                    <button class="btn warning"
+                        onclick="window.location.href='/processblog?type=personal'">personal</button>
+                </div>
+                <div class="card">
+                    <h3>Follow Me</h3>
+                    <p>On twitter, instagram or whatever...</p>
+                </div>
+            </div>
+        </div>
 
 </body>
+<!-- <div class="footer">
+    <h2>Footer</h2>
+</div> -->
+
 </html>
