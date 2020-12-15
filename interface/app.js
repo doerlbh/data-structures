@@ -106,8 +106,56 @@ app.get('/temperature', function(req, res) {
     const client = new Pool(db_credentials);
 
     // SQL query 
-    var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
-             AVG(sensorValue::int) as num_obs
+    // var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
+    //          AVG(sensorValue::int) as num_obs_day
+    //          FROM sensorData
+    //          GROUP BY sensorday
+    //          ORDER BY sensorday;`;
+
+    // client.connect();
+    // client.query(q, (qerr, qres) => {
+    //     if (qerr) { throw qerr }
+    //     else {
+    //         res.end(template({ sensordata1 : JSON.stringify(qres.rows)}));
+    //         client.end();
+    //         console.log('1) responded to request for sensor graph');
+    //     }
+    // });
+    
+    // var q = `SELECT EXTRACT(HOUR FROM sensorTime) as sensorhour,
+    //          AVG(sensorValue::int) as num_obs_hour
+    //          FROM sensorData
+    //          GROUP BY sensorhour
+    //          ORDER BY sensorhour;`;
+
+    // client.connect();
+    // client.query(q, (qerr, qres) => {
+    //     if (qerr) { throw qerr }
+    //     else {
+    //         res.end(template({ sensordata2 : JSON.stringify(qres.rows)}));
+    //         client.end();
+    //         console.log('1) responded to request for sensor graph');
+    //     }
+    // });
+    
+    // var q = `SELECT EXTRACT(MINUTE FROM sensorTime) as sensorminute,
+    //          AVG(sensorValue::int) as num_obs_minute
+    //          FROM sensorData
+    //          GROUP BY sensorminute
+    //          ORDER BY sensorminute;`;
+
+    // client.connect();
+    // client.query(q, (qerr, qres) => {
+    //     if (qerr) { throw qerr }
+    //     else {
+    //         res.end(template({ sensordata3 : JSON.stringify(qres.rows)}));
+    //         client.end();
+    //         console.log('1) responded to request for sensor graph');
+    //     }
+    // });
+    
+        var q = `SELECT EXTRACT(MINUTE FROM sensorTime) as sensorday,
+             AVG(sensorValue::int) as num_obs_day
              FROM sensorData
              GROUP BY sensorday
              ORDER BY sensorday;`;
@@ -116,17 +164,24 @@ app.get('/temperature', function(req, res) {
     client.query(q, (qerr, qres) => {
         if (qerr) { throw qerr }
         else {
-            res.end(template({ sensordata: JSON.stringify(qres.rows)}));
+            res.end(template({ sensordata1 : JSON.stringify(qres.rows)}));
             client.end();
             console.log('1) responded to request for sensor graph');
         }
     });
+    
 }); 
 
 app.get('/processblog', function(req, res) {
     // AWS DynamoDB credentials
     AWS.config = new AWS.Config();
     AWS.config.region = "us-east-2";
+    
+    console.log(req.query.type);
+    var topic = "cats";
+    if (["cats", "personal", "work"].includes(req.query.type)) {
+        topic = req.query.type;
+    }
 
     // Connect to the AWS DynamoDB database
     var dynamodb = new AWS.DynamoDB();
@@ -136,7 +191,7 @@ app.get('/processblog', function(req, res) {
         TableName : "bhprocessblog",
         KeyConditionExpression: "tp = :tp", // the query expression
         ExpressionAttributeValues: { // the query values
-            ":tp": {S: "cats"}
+            ":tp": {S: topic}
         }
     };
 
