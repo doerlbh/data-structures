@@ -48,10 +48,30 @@
             addToMap(data, mymap);
         }
 
+        function prettyOutput(meetings) {
+            // var myTable = JSON.stringify(meetings)
+            var myTable = '<table><thead><tr><th>Name</th><th>Location</th><th>From</th><th>Till</th><th>Day</th><th>Type</th><th>Address</th></tr></thead><tbody>';
+            console.log(meetings)
+            for (var i = 0; i < meetings.length; i++) {
+                myTable += '<tr>';
+                myTable += '<td>' + meetings[i].name + '</td>';
+                myTable += '<td>' + meetings[i].loc + '</td>';
+                myTable += '<td>' + meetings[i].shour + '</td>';
+                myTable += '<td>' + meetings[i].time + '</td>';
+                myTable += '<td>' + meetings[i].day + '</td>';
+                myTable += '<td>' + meetings[i].types + '</td>';
+                myTable += '<td>' + meetings[i].address + '</td>';
+                myTable += '</tr>';
+            }
+            myTable += '</body></table>'
+
+            return myTable;
+        }
+
         function addToMap(data, mymap) {
 
             for (var i = 0; i < data.length; i++) {
-                L.marker([data[i].lat, data[i].lon]).bindPopup(JSON.stringify(data[i].meetings)).addTo(mymap);
+                L.marker([data[i].lat, data[i].lon]).bindPopup(prettyOutput(data[i].meetings), {maxHeight: 500, maxWidth: 1000, closeOnClick: false,keepInView: true}).addTo(mymap);
             }
 
         }
@@ -69,16 +89,17 @@
             return [hours, minutes];
         }
 
-        function filterTime(hour,minute,side) {
+        function filterTime(hour, minute, side) {
             filteredData = []
             for (var i = 0; i < data.length; i++) {
                 var meetings = data[i].meetings
                 if (side == 0) {
-                    var filteredMeetings = meetings.filter(m =>  
-                        convertTime12to24(m.time)[0] >= hour && convertTime12to24(m.time)[1] >= minute)
+                    var filteredMeetings = meetings.filter(m =>
+                        convertTime12to24(m.shour)[0] >= hour && convertTime12to24(m.shour)[1] >= minute)
                 } else {
-                    var filteredMeetings = meetings.filter(m => 
-                        convertTime12to24(m.time)[0] <= hour && convertTime12to24(m.time)[1] <= minute)                }
+                    var filteredMeetings = meetings.filter(m =>
+                        convertTime12to24(m.time)[0] <= hour && convertTime12to24(m.time)[1] <= minute)
+                }
                 if (filteredMeetings.length > 0) {
                     newData = data[i];
                     newData.meetings = filteredMeetings;
@@ -100,8 +121,8 @@
 
                 var hours1 = Math.floor(ui.values[0] / 60);
                 var minutes1 = ui.values[0] - (hours1 * 60);
-                
-                filterTime(hours1,minutes1,0);
+
+                filterTime(hours1, minutes1, 0);
 
                 if (hours1.length == 1) hours1 = '0' + hours1;
                 if (minutes1.length == 1) minutes1 = '0' + minutes1;
@@ -128,7 +149,7 @@
                 var hours2 = Math.floor(ui.values[1] / 60);
                 var minutes2 = ui.values[1] - (hours2 * 60);
 
-                filterTime(hours2,minutes2,1);
+                filterTime(hours2, minutes2, 1);
 
                 if (hours2.length == 1) hours2 = '0' + hours2;
                 if (minutes2.length == 1) minutes2 = '0' + minutes2;
