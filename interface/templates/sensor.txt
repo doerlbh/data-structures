@@ -4,7 +4,7 @@
 <style>
 
     body {
-      font: 10px sans-serif;
+      font: 16px sans-serif;
     }
     
     .axis path,
@@ -34,7 +34,7 @@
 
 <!-- Create a div where the graph will take place -->
 
-<h2> Demostration for the weather application </h2>
+<h1> Demostration for the weather application </h1>
 
 <div id="my_dataviz_day"></div>
 <div id="my_dataviz_hour"></div>
