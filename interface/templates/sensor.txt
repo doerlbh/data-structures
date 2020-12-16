@@ -1,32 +1,128 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 
-<style>
+<head>
+    <meta charset="utf-8">
+    <title>Temperature Sensor - Baihan Lin</title>
+    <meta name="description" content="Temperature Sensor - Baihan Lin">
+    <meta name="author" content="Baihan Lin">
+    <!-- <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" /> -->
+</head>
 
+<style>
     body {
-      font: 16px sans-serif;
+        font-family: Arial;
+        padding: 20px;
+        background: #f1f1f1;
     }
-    
+
+    /* Header/Blog Title */
+    .header {
+        padding: 30px;
+        font-size: 40px;
+        text-align: center;
+        background: white;
+    }
+
+    /* Create two unequal columns that floats next to each other */
+    /* Left column */
+    .leftcolumn {
+        float: left;
+        width: 75%;
+    }
+
+    /* Right column */
+    .rightcolumn {
+        float: left;
+        width: 20%;
+        padding-left: 20px;
+    }
+
+    /* Fake image */
+    .fakeimg {
+        padding: 10px;
+    }
+
+    /* Add a card effect for articles */
+    .card {
+        background-color: white;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 20px;
+        text-align: center;
+        background: #ddd;
+        margin-top: 20px;
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+
+        .leftcolumn,
+        .rightcolumn {
+            width: 100%;
+            padding: 0;
+        }
+    }
+
+    .btn {
+        width: 80% border: none;
+        background-color: inherit;
+        padding: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    /* On mouse-over */
+    .btn:hover {
+        background: #eee;
+    }
+
+    .success {
+        color: #900C3F;
+    }
+
+    .info {
+        color: #556B2F;
+    }
+
+    .warning {
+        color: #6495ED;
+    }
+
     .axis path,
     .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
     }
-    
+
     .bar {
-      fill: orange;
+        fill: orange;
     }
-    
+
     .bar:hover {
-      fill: orangered ;
+        fill: orangered;
     }
-    
+
     .x.axis path {
-      display: none;
+        display: none;
     }
-    
-    </style>
+</style>
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -34,23 +130,42 @@
 
 <!-- Create a div where the graph will take place -->
 
-<h1> Demostration for the weather application </h1>
+<h1> Demostration for the Temperature Sensor Data - Baihan Lin </h1>
 
 <div id="my_dataviz_day"></div>
 <div id="my_dataviz_hour"></div>
 <div id="my_dataviz_minute"></div>
 
+<button class="btn success" onclick="window.location.href='/temperature?type=day'">Day</button>
+<button class="btn info" onclick="window.location.href='/temperature?type=hour'">Hour</button>
+<button class="btn warning" onclick="window.location.href='/temperature?type=minute'">Minute</button>
+
 <script>
 
-    var data1 = {{{sensordata1}}} ;
+    var data = {{{ sensordata }}};
+
+    if (data.length == 60) {
+        var timescale = "Last 60 minutes";
+        var linecolor = "#6495ED";
+    }
+
+    if (data.length == 24) {
+        var timescale = "Last 24 Hours";
+        var linecolor = "#556B2F";
+    }
+
+    if (data.length == 30) {
+        var timescale = "Last 30 Days";
+        var linecolor = "#900C3F";
+    }
 
     // set the dimensions and margins of the graph
     var margin = { top: 30, right: 30, bottom: 30, left: 30 },
-        width = 600 - margin.left - margin.right,
-        height =600 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
 
-    // append the svg object to the body1 of the page
-    var svg1 = d3.select("#my_dataviz_day")
+    // append the svg object to the body of the page
+    var svg = d3.select("#my_dataviz_day")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -59,37 +174,37 @@
             "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    // Add x1axis --> it is a date format
-    var x1 = d3.scaleLinear()
-        .domain([0, d3.max(data1, function (d) { return d.sensorday; })])
+    // Add xaxis --> it is a date format
+    var x = d3.scaleLinear()
+        .domain([0, d3.max(data, function (d) { return d.sensortick; })])
         .range([0, width]);
-    svg1.append("g")
+    svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x1));
+        .call(d3.axisBottom(x));
 
-    // Add y1 axis
-    var y1 = d3.scaleLinear()
-        .domain([0, d3.max(data1, function (d) { return d.num_obs_day; })])
+    // Add y axis
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function (d) { return d.num_obs; })])
         .range([height, 0]);
-    svg1.append("g")
-        .call(d3.axisLeft(y1));
+    svg.append("g")
+        .call(d3.axisLeft(y));
 
     // Add the line
-    svg1.append("path")
-        .datum(data1)
+    svg.append("path")
+        .datum(data)
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 2)
+        .attr("stroke", linecolor)
+        .attr("stroke-width", 3)
         .attr("d", d3.line()
-            .x(function (d) { return x1(d.sensorday) })
-            .y(function (d) { return y1(d.num_obs_day) })
+            .x(function (d) { return x(d.sensortick) })
+            .y(function (d) { return y(d.num_obs) })
         )
 
-    svg1.append("text")
-        .attr("x", (width / 2))             
+    svg.append("text")
+        .attr("x", (width / 2))
         .attr("y", 0 + (height * 3 / 4))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .text("Temperature Distributions by every 60 minutes");
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .text("This is the Dynamically Changing Temperature (in Fahrenheits) in the " + timescale);
 
 </script>

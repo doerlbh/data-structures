@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <title>AA Meetings</title>
-    <meta name="description" content="Meetings of AA in Manhattan">
-    <meta name="author" content="AA">
+    <title>AA Meetings - Baihan Lin</title>
+    <meta name="description" content="Meetings of AA in Manhattan - Baihan Lin">
+    <meta name="author" content="Baihan Lin">
     <link rel="stylesheet" href="css/styles.css?v=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -140,7 +140,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
-    <h2> A Map Guide to Manhattan AA meetings </h2>
+    <h2> A Map Guide to Manhattan AA meetings - Baihan Lin </h2>
         
         <div id="mapid"></div>
 
